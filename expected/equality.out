@@ -1,0 +1,29 @@
+CREATE EXTENSION aequitas;
+-- no match
+SELECT aequitas.equals('hello', 'world');
+ equals 
+--------
+ f
+(1 row)
+
+-- match
+SELECT aequitas.equals('hello', 'hello');
+ equals 
+--------
+ t
+(1 row)
+
+-- match on a 16 byte boundary
+SELECT aequitas.equals('1234567890123456', '1234567890123456');
+ equals 
+--------
+ t
+(1 row)
+
+-- no match when partial
+SELECT aequitas.equals('123456', '12345');
+ equals 
+--------
+ f
+(1 row)
+

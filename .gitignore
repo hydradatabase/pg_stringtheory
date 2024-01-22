@@ -1,0 +1,6 @@
+*.so
+*.o
+.clangd
+
+results
+

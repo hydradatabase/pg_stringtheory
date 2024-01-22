@@ -1,0 +1,44 @@
+CREATE EXTENSION aequitas;
+ERROR:  extension "aequitas" already exists
+-- no match
+SELECT aequitas.strstr('hello', 'world');
+ strstr 
+--------
+     -1
+(1 row)
+
+-- match with 0
+SELECT aequitas.strstr('hello', 'hello');
+ strstr 
+--------
+      0
+(1 row)
+
+-- match on a 16 byte boundary
+SELECT aequitas.strstr('1234567890123456', '1234567890123456');
+ strstr 
+--------
+      0
+(1 row)
+
+-- match when partial
+SELECT aequitas.strstr('123456', '12345');
+ strstr 
+--------
+      0
+(1 row)
+
+-- needle found in haystack
+SELECT aequitas.strstr('hello world', 'ello');
+ strstr 
+--------
+      1
+(1 row)
+
+-- haystack in needle not found
+SELECT aequitas.strstr('ello', 'hello world');
+ strstr 
+--------
+     -1
+(1 row)
+

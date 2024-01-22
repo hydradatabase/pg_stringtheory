@@ -1,0 +1,5 @@
+# compare extension
+comment = 'tools for comparing strings'
+default_version = '1.0.0'
+module_pathname = '$libdir/aequitas'
+relocatable = true
