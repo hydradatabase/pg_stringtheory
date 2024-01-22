@@ -1,4 +1,4 @@
-name: Aequitas Build and Test
+name: pg_stringtheory Build and Test
 on:
   push:
   pull_request:
@@ -12,7 +12,7 @@ jobs:
 
     steps:
       - name: Test details
-        run: echo Build and test Aequitas on ${{ matrix.os }} with PostgreSQL ${{ matrix.version }} branch
+        run: echo Build and test pg_stringtheory on ${{ matrix.os }} with PostgreSQL ${{ matrix.version }} branch
 
       - name: Checkout and build PostgreSQL code
         run: |
@@ -34,16 +34,16 @@ jobs:
           ./pg_ctl -D data -l logfile start
           popd
 
-      - name: Checkout aequitas extension code
+      - name: Checkout pg_stringtheory extension code
         uses: actions/checkout@v4
         with:
-          path: aequitas
+          path: stringtheory
 
-      - name: Build and test aequitas extension
+      - name: Build and test pg_stringtheory extension
         id: regression-tests
         run: |
           export PATH="${PWD}/postgres/inst/bin:$PATH"
-          pushd aequitas
+          pushd stringtheory
           make install
           make installcheck
           popd
@@ -51,4 +51,4 @@ jobs:
       - name: Print regression.diffs if regression tests failed
         if: failure() && steps.regression-tests.outcome != 'success'
         run: |
-          cat aequitas/regression.diffs
+          cat stringtheory/regression.diffs

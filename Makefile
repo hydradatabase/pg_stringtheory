@@ -3,7 +3,7 @@
 SRCS = src/text.cpp
 OBJS = $(subst .cpp,.o, $(SRCS))
 
-MODULE_big = aequitas
+MODULE_big = stringtheory
 
 PG_CPPFLAGS = -O3 -std=c++17 -I src/sse
 
@@ -19,9 +19,9 @@ ifeq ($(UNAME_S),x86_64)
 	PG_CPPFLAGS += -msse4.2
 endif
 
-EXTENSION = aequitas
-DATA = aequitas--1.0.0.sql
-PGFILEDESC = "Aequitas - tools for testing equality"
+EXTENSION = stringtheory
+DATA = stringtheory--1.0.0.sql
+PGFILEDESC = "stringtheory - tools for testing equality"
 
 PG_CONFIG = pg_config
 PGXS := $(shell $(PG_CONFIG) --pgxs)
