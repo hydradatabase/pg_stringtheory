@@ -1,13 +1,13 @@
-CREATE EXTENSION aequitas;
+CREATE EXTENSION stringtheory;
 
 -- no match
-SELECT aequitas.equals('hello', 'world');
+SELECT stringtheory.equals('hello', 'world');
 
 -- match
-SELECT aequitas.equals('hello', 'hello');
+SELECT stringtheory.equals('hello', 'hello');
 
 -- match on a 16 byte boundary
-SELECT aequitas.equals('1234567890123456', '1234567890123456');
+SELECT stringtheory.equals('1234567890123456', '1234567890123456');
 
 -- no match when partial
-SELECT aequitas.equals('123456', '12345');
+SELECT stringtheory.equals('123456', '12345');
