@@ -5,7 +5,7 @@ OBJS = $(subst .cpp,.o, $(SRCS))
 
 MODULE_big = aequitas
 
-PG_CPPFLAGS = -O3 -std=c++17 -I src/sse -g
+PG_CPPFLAGS = -O3 -std=c++17 -I src/sse
 
 UNAME_S := $(shell uname -m)
 ifeq ($(UNAME_S),arm64)
