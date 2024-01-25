@@ -11,7 +11,7 @@ UNAME_S := $(shell uname -m)
 ifeq ($(UNAME_S),arm64)
 	PG_CPPFLAGS += -stdlib=libc++ -DHAVE_NEON_INSTRUCTIONS=1
 endif
-ifeq ($(UNAME_S),arm64)
+ifeq ($(UNAME_S),aarch64)
 	PG_CPPFLAGS += -stdlib=libc++ -DHAVE_NEON_INSTRUCTIONS=1
 endif
 ifeq ($(UNAME_S),x86_64)
