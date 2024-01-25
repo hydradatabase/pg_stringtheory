@@ -2,6 +2,8 @@ extern "C" {
 #include "postgres.h"
 
 #include "fmgr.h"
+#include "mb/pg_wchar.h"
+
 #if PG_VERSION_NUM >= 160000
 #include "varatt.h"
 #endif
@@ -73,7 +75,8 @@ Datum pg_strstr(PG_FUNCTION_ARGS) {
   }
 
   /* Get the results from the simd functions. */
-  size_t ret = fast_strstr(VARDATA(left), len_left, VARDATA(right), len_right);
+  size_t ret =
+      fast_strstr(VARDATA_ANY(left), len_left, VARDATA_ANY(right), len_right);
 
   PG_RETURN_INT32(ret);
 }
@@ -98,7 +101,8 @@ Datum pg_equals(PG_FUNCTION_ARGS) {
   }
 
   /* Get the results from the simd functions. */
-  size_t ret = fast_strstr(VARDATA(left), len_left, VARDATA(right), len_right);
+  size_t ret =
+      fast_strstr(VARDATA_ANY(left), len_left, VARDATA_ANY(right), len_right);
 
   /* If the result is 0, strings are equal. */
   PG_RETURN_BOOL(ret == 0);
