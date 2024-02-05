@@ -20,7 +20,7 @@ ifeq ($(UNAME_S),x86_64)
 endif
 
 EXTENSION = stringtheory
-DATA = stringtheory--1.0.0.sql
+DATA = stringtheory--1.0.1.sql
 PGFILEDESC = "stringtheory - tools for testing equality"
 
 PG_CONFIG = pg_config

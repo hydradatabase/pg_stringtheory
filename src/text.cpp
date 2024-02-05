@@ -74,9 +74,16 @@ Datum pg_strstr(PG_FUNCTION_ARGS) {
     PG_RETURN_INT32(-1);
   }
 
+  /* Make a copy of the data to null terminate. */
+  char left_term[ len_left + 1 ];
+  memcpy(left_term, VARDATA_ANY(left), len_left);
+  left_term[ len_left ] = '\0';
+  char right_term[ len_right + 1 ];
+  memcpy(right_term, VARDATA_ANY(right), len_right);
+  right_term[ len_right ] = '\0';
+
   /* Get the results from the simd functions. */
-  size_t ret =
-      fast_strstr(VARDATA_ANY(left), len_left, VARDATA_ANY(right), len_right);
+  size_t ret = fast_strstr(left_term, len_left, right_term, len_right);
 
   PG_RETURN_INT32(ret);
 }
