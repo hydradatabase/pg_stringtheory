@@ -28,6 +28,8 @@ PGXS := $(shell $(PG_CONFIG) --pgxs)
 
 REGRESS = equality strstr
 
+COMPILE.cxx.bc = $(CLANG) -xc++ $(BITCODE_CXXFLAGS) $(PG_CXXFLAGS) $(CPPFLAGS) -emit-llvm -c
+
 include $(PGXS)
 
 lintcheck:
