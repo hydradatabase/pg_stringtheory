@@ -74,16 +74,41 @@ Datum pg_strstr(PG_FUNCTION_ARGS) {
     PG_RETURN_INT32(-1);
   }
 
-  /* Make a copy of the data to null terminate. */
-  char left_term[ len_left + 1 ];
-  memcpy(left_term, VARDATA_ANY(left), len_left);
-  left_term[ len_left ] = '\0';
-  char right_term[ len_right + 1 ];
-  memcpy(right_term, VARDATA_ANY(right), len_right);
-  right_term[ len_right ] = '\0';
+  /*
+   * Make a copy of the data to null terminate.
+   *
+   * If either side is over 2^20 bytes, don't allocate
+   * on the stack, but use heap instead.
+   */
+  bool use_heap = (len_left >= 1048576 || len_right >= 1048576);
+  size_t ret;
 
-  /* Get the results from the simd functions. */
-  size_t ret = fast_strstr(left_term, len_left, right_term, len_right);
+  if (!use_heap) {
+    char left_term[ len_left + 1 ];
+    memcpy(left_term, VARDATA_ANY(left), len_left);
+    left_term[ len_left ] = '\0';
+
+    char right_term[ len_right + 1 ];
+    memcpy(right_term, VARDATA_ANY(right), len_right);
+    right_term[ len_right ] = '\0';
+
+    /* Get the results from the simd functions. */
+    ret = fast_strstr(left_term, len_left, right_term, len_right);
+  } else {
+    char *left_term = (char *)palloc(len_left + 1);
+    memcpy(left_term, VARDATA_ANY(left), len_left);
+    left_term[ len_left ] = '\0';
+
+    char *right_term = (char *)palloc(len_right + 1);
+    memcpy(right_term, VARDATA_ANY(right), len_right);
+    right_term[ len_right ] = '\0';
+
+    /* Get the results from the simd functions. */
+    ret = fast_strstr(left_term, len_left, right_term, len_right);
+
+    pfree(left_term);
+    pfree(right_term);
+  }
 
   PG_RETURN_INT32(ret);
 }
@@ -107,9 +132,41 @@ Datum pg_equals(PG_FUNCTION_ARGS) {
     PG_RETURN_BOOL(false);
   }
 
-  /* Get the results from the simd functions. */
-  size_t ret =
-      fast_strstr(VARDATA_ANY(left), len_left, VARDATA_ANY(right), len_right);
+  /*
+   * Make a copy of the data to null terminate.
+   *
+   * If either side is over 2^20 bytes, don't allocate
+   * on the stack, but use heap instead.
+   */
+  bool use_heap = (len_left >= 1048576 || len_right >= 1048576);
+  size_t ret;
+
+  if (!use_heap) {
+    char left_term[ len_left + 1 ];
+    memcpy(left_term, VARDATA_ANY(left), len_left);
+    left_term[ len_left ] = '\0';
+
+    char right_term[ len_right + 1 ];
+    memcpy(right_term, VARDATA_ANY(right), len_right);
+    right_term[ len_right ] = '\0';
+
+    /* Get the results from the simd functions. */
+    ret = fast_strstr(left_term, len_left, right_term, len_right);
+  } else {
+    char *left_term = (char *)palloc(len_left + 1);
+    memcpy(left_term, VARDATA_ANY(left), len_left);
+    left_term[ len_left ] = '\0';
+
+    char *right_term = (char *)palloc(len_right + 1);
+    memcpy(right_term, VARDATA_ANY(right), len_right);
+    right_term[ len_right ] = '\0';
+
+    /* Get the results from the simd functions. */
+    ret = fast_strstr(left_term, len_left, right_term, len_right);
+
+    pfree(left_term);
+    pfree(right_term);
+  }
 
   /* If the result is 0, strings are equal. */
   PG_RETURN_BOOL(ret == 0);

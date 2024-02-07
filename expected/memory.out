@@ -1,0 +1,52 @@
+CREATE TABLE memory_test (i BIGINT, t TEXT);
+INSERT INTO memory_test SELECT 1, repeat('a', (2^19)::INTEGER);
+INSERT INTO memory_test SELECT 2, repeat('b', (2^20)::INTEGER);
+INSERT INTO memory_test SELECT 3, repeat('c', (2^21)::INTEGER);
+SELECT i, stringtheory.strstr(t, 'aa') FROM memory_test;
+ i | strstr 
+---+--------
+ 1 |      0
+ 2 |     -1
+ 3 |     -1
+(3 rows)
+
+SELECT i, stringtheory.strstr(t, 'bb') FROM memory_test;
+ i | strstr 
+---+--------
+ 1 |     -1
+ 2 |      0
+ 3 |     -1
+(3 rows)
+
+SELECT i, stringtheory.strstr(t, 'cc') FROM memory_test;
+ i | strstr 
+---+--------
+ 1 |     -1
+ 2 |     -1
+ 3 |      0
+(3 rows)
+
+SELECT i, stringtheory.equals(t, repeat('a', (2^19)::INTEGER)) FROM memory_test;
+ i | equals 
+---+--------
+ 1 | t
+ 2 | f
+ 3 | f
+(3 rows)
+
+SELECT i, stringtheory.equals(t, repeat('b', (2^20)::INTEGER)) FROM memory_test;
+ i | equals 
+---+--------
+ 1 | f
+ 2 | t
+ 3 | f
+(3 rows)
+
+SELECT i, stringtheory.equals(t, repeat('c', (2^21)::INTEGER)) FROM memory_test;
+ i | equals 
+---+--------
+ 1 | f
+ 2 | f
+ 3 | t
+(3 rows)
+
