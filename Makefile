@@ -20,13 +20,13 @@ ifeq ($(UNAME_S),x86_64)
 endif
 
 EXTENSION = stringtheory
-DATA = stringtheory--1.0.1.sql
+DATA = stringtheory--1.0.2.sql
 PGFILEDESC = "stringtheory - tools for testing equality"
 
 PG_CONFIG = pg_config
 PGXS := $(shell $(PG_CONFIG) --pgxs)
 
-REGRESS = equality strstr
+REGRESS = equality strstr memory
 
 COMPILE.cxx.bc = $(CLANG) -xc++ $(BITCODE_CXXFLAGS) $(PG_CXXFLAGS) $(CPPFLAGS) -emit-llvm -c
 
